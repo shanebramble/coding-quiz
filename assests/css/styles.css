@@ -1,0 +1,33 @@
+body {
+    background-color: #FDF6F0;
+    margin: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-around;
+}
+
+main {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.coding-questions {
+    margin-top: 75px;
+}
+
+.questions h2 {
+    text-align: center;
+}
+
+.questions p {
+    width: 70%;
+    text-align: center;
+    margin: 10px auto;
+    padding: 10px 0;
+}
+
+.options {
+    margin-left: 46%;
+}
