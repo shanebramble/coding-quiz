@@ -1,91 +1,121 @@
 var scoreCount = 0;
+var timeLeft = 180;
+var questionsArrayIndex = 0;
+var timerE1 = document.querySelector(".countdown-timer span");
+var questionFormation = document.querySelector(".questions h2");
 var questionsArray = [{
         question: "JavaScript is the same as Java.",
-        choices: [],
+        choices: [true, false],
         answer: false
     },
     {
         question: "Which built-in method adds one or more elements to the end of an array and returns the new length of the array? ",
-        choices: [],
-        answer: "push"
+        choices: ["last()", "put()", "push()", "None of the above"],
+        answer: "push()"
     },
     {
         question: "Which built-in method returns the string representation of the number's value?",
-        choices: [],
-        answer: "toString"
+        choices: ["toValue()", "toNumber()", "toString()", "None of the above."],
+        answer: "toString()"
     },
     {
         question: "Inside which HTML element do we put the JavaScript?",
-        choices: [],
+        choices: ["<scripting>", "<javascript>", "<js>", "<script>"],
         answer: "<script>"
     },
     {
         question: "The external JavaScript file must contain the <script> tag.",
-        choices: [],
+        choices: [true, false],
         answer: false
     },
     {
         question: "How do you declare a JavaScript variable?",
-        choices: [],
+        choices: ["variable carName", "String carName", "float carName", "var carName"],
         answer: "var carName"
     },
     {
         question: "Which operator is used to assign a value to a variable?",
-        choices: [],
+        choices: ["+", "-", "*", "="],
         answer: "="
     },
     {
         question: "What will the following code return: Boolean(10 > 9)",
-        choices: [],
+        choices: [false, true, "undefined", null],
         answer: true
     },
     {
         question: "Is JavaScript case-sensitive?",
-        choices: [],
+        choices: ["No", "Yes", "only functions", "only variables"],
         answer: "Yes"
     },
     {
         question: "What does DOM stand for?",
-        choices: [],
+        choices: ["Dissolved Organic Matter", "Dissolved Organic Matter", "	Document Object Model", "Disk on Module"],
         answer: "Document Object Model"
     },
 ];
 
 
-var startQuiz = function (){
+
+var quizEnd = function (){
+
+};
+// A countdown timer for the quiz.
+var countdown = function () {
+    var timeInterval = setInterval(function () {
+        if (timeLeft <= 0) {
+            timerE1.textContent = "";
+            clearInterval(timeInterval);
+            quizEnd();
+
+        } else {
+            timerE1.textContent = timeLeft;
+            timeLeft--;
+        }
+    }, 1000);
+};
+
+// Check the answer of the selected choice.
+var checkAnswer = function ()
+{
+    if (this.value === questionsArray[questionsArrayIndex].answer)
+    {
+
+    }
+
+};
+
+// Save the scores of a user to local storage.
+var saveScores = function (){
+
+};
+// A function to form both the questions and corresponding options.
+var createQuestions = function () {
+
+    questionFormation.textContent = questionsArray[questionsArrayIndex].question;
+
+    for (var j = 0; j < questionsArray[questionsArrayIndex].choices.length; j++) {
+
+        // create button for each choice.
+        var optionButton = document.createElement("button");
+        optionButton.classList.add("choice-btn", "btn", "btn-primary", );
+        optionButton.textContent = questionsArray[questionsArrayIndex].choices[j];
+
+        // append to button element to ul.
+        document.querySelector(".choices-list").appendChild(optionButton);
+    }
+};
+
+var startQuiz = function () {
     document.querySelector(".questions p").remove();
-    document.querySelector(".options button").remove();
-    var questionFormation = document.querySelector(".questions h2");
-    // create list for different options.
-    var optionListItemEl = document.createElement("li");
-    optionListItemEl.className = "option-choice-item";
+    document.querySelector(".start-quiz").remove();
 
-    // create button for each option.
-    var optionButton = document.createElement("button");
-    optionButton.classList.add("option-choice-button", "btn", "btn-primary",);
-    optionButton.textContent = "Option 1";
-
-    // append to option button to li element.
-    optionListItemEl.appendChild(optionButton);
-
-    // append to list element to ul.
-     document.querySelector(".option-choices").appendChild(optionListItemEl);
-
-    questionFormation.textContent = questionsArray[9].question;
+    // timer starts counting.
+    countdown();
+    // generate questions with options.
+    createQuestions();
 };
 
 
 
-document.querySelector(".options button").addEventListener("click",startQuiz);
-
-
-
-
-
-
-
-
-
-
-
-
+document.querySelector(".start-quiz").addEventListener("click", startQuiz);

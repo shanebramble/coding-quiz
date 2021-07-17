@@ -1,5 +1,7 @@
 body {
-    background-color: #FDF6F0;
+    background: hsla(186, 33%, 94%, 1);
+    font-family: Arial sans-serif;
+    background: linear-gradient(90deg, hsla(186, 33%, 94%, 1) 0%, hsla(216, 41%, 79%, 1) 100%);
     margin: 20px;
 }
 
@@ -8,12 +10,17 @@ header {
     justify-content: space-around;
 }
 
+.high-scores {
+    color: rgb(192, 50, 50);
+    font-weight: bold;
+}
+
 main {
     width: 80%;
     margin: 0 auto;
 }
 
-.coding-questions {
+.quiz-section {
     margin-top: 75px;
 }
 
@@ -27,7 +34,12 @@ main {
     margin: 10px auto;
     padding: 10px 0;
 }
-
-.options {
-    margin-left: 46%;
+.start-quiz{
+    display: flex;
+    margin: 10px auto;
+}
+.choice-btn
+{
+    display: block;
+    margin: 10px;
 }
