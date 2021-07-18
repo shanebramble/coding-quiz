@@ -154,8 +154,28 @@ var saveScores = function (event) {
 };
 
 var loadScores = function () {
-    
+    var storedHighScores = JSON.parse(window.localStorage.getItem("high-scores")) || [];
+    // sort highscores by score property in descending order
+    storedHighScores.sort(function (a, b) {
+        return b.score - a.score;
+    });
+
+    storedHighScores.forEach(function (score) {
+        // create li tag for each high score
+        var liTag = document.createElement("li");
+        liTag.classList.add("list-group-item");
+        liTag.textContent = score.initials + " - " + score.score;
+
+        // display on page
+        var olEl = document.querySelector(".modal-body");
+        olEl.appendChild(liTag);
+    });
+
 };
+function clearHighscores() {
+    window.localStorage.removeItem("high-scores");
+    window.location.reload();
+}
 
 // A function to form both the questions and corresponding options.
 var createQuestions = function () {
@@ -211,3 +231,5 @@ var startQuiz = function () {
 };
 
 document.querySelector(".start-quiz").addEventListener("click", startQuiz);
+document.querySelector(".clear-all").onclick = clearHighscores;
+loadScores();
