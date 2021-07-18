@@ -1,9 +1,14 @@
 var scoreCount = 0;
 var timeLeft = 180;
 var questionsArrayIndex = 0;
+var timeInterval;
 var timerE1 = document.querySelector(".countdown-timer span");
 var questionFormation = document.querySelector(".questions h2");
 var answerResponse = document.querySelector("#answer-response");
+var initialsSubmitBtn = document.querySelector(".submit-btn");
+var inputInitial = document.querySelector(".input-initial");
+var formEl = document.querySelector("#initial-form");
+var totalUserHighScores = [];
 var questionsArray = [{
         question: "JavaScript is the same as Java.",
         choices: ["true", "false"],
@@ -59,11 +64,21 @@ var questionsArray = [{
 var lettersArray = ["a", "b", "c", "d"];
 
 var quizEnd = function () {
+    questionFormation.textContent = "Quiz Session is done 🏁";
+    document.querySelector(".questions p").classList.remove("hide");
+    document.querySelector(".questions p").textContent = " Your Final Score is: " + scoreCount;
+    document.querySelector(".choices-list").innerHTML = "";
+    clearInterval(timeInterval);
+    timerE1.textContent = 0;
+    formEl.classList.remove("hide");
+    formEl.classList.add("submit-style");
 
+
+    formEl.addEventListener("submit", saveScores);
 };
 // A countdown timer for the quiz.
 var countdown = function () {
-    var timeInterval = setInterval(function () {
+    timeInterval = setInterval(function () {
         if (timeLeft <= 0) {
             timerE1.textContent = "";
             clearInterval(timeInterval);
@@ -78,8 +93,7 @@ var countdown = function () {
 
 // Check the answer of the selected choice.
 var checkAnswer = function () {
-   
-    console.log("The value of the selected option is: " + this.value);
+
     // Check the value of the clicked button.
     if (this.value != questionsArray[questionsArrayIndex].answer) {
         // If value picked is incorrect subtract 10 from timer.
@@ -110,6 +124,7 @@ var checkAnswer = function () {
 
     if (questionsArrayIndex === questionsArray.length) {
         quizEnd();
+
     } else {
         // Call the createQuestions function.
         createQuestions();
@@ -118,12 +133,28 @@ var checkAnswer = function () {
 };
 
 // Save the scores of a user to local storage.
-var saveScores = function () {
+var saveScores = function (event) {
+    event.preventDefault();
+    var initials = inputInitial.value.trim();
+    //  formEl.reset();
+    if (initials !== "") {
 
+        var highscores =
+            JSON.parse(window.localStorage.getItem("high-scores")) || [];
+
+        var currentUserScore = {
+            initials: initials,
+            score: scoreCount
+        };
+        console.log("The entered input initials are: " + initials);
+        highscores.push(currentUserScore);
+        localStorage.setItem("high-scores", JSON.stringify(highscores));
+        location.reload();
+    }
 };
 
 var loadScores = function () {
-
+    
 };
 
 // A function to form both the questions and corresponding options.
@@ -135,42 +166,42 @@ var createQuestions = function () {
     document.querySelector(".choices-list").innerHTML = "";
 
     // Alternative Method:
-/*
-    for (var i = 0; i < questionsArray[questionsArrayIndex].choices.length; i++) {
+    /*
+        for (var i = 0; i < questionsArray[questionsArrayIndex].choices.length; i++) {
 
-        // create button for each choice.
-        var optionButton = document.createElement("button");
-        optionButton.classList.add("choice-btn", "btn", "btn-primary", );
-        optionButton.setAttribute("index-location", "questionsArray[questionsArrayIndex].choices[i]");
-        optionButton.textContent = questionsArray[questionsArrayIndex].choices[i];
+            // create button for each choice.
+            var optionButton = document.createElement("button");
+            optionButton.classList.add("choice-btn", "btn", "btn-primary", );
+            optionButton.setAttribute("index-location", "questionsArray[questionsArrayIndex].choices[i]");
+            optionButton.textContent = questionsArray[questionsArrayIndex].choices[i];
 
-        // Add event listener to each button.
-        optionButton.addEventListener("click", checkAnswer);
+            // Add event listener to each button.
+            optionButton.addEventListener("click", checkAnswer);
 
-        // Append button element to ul.
-        document.querySelector(".choices-list").appendChild(optionButton);
-    }*/
+            // Append button element to ul.
+            document.querySelector(".choices-list").appendChild(optionButton);
+        }*/
 
-    questionsArray[questionsArrayIndex].choices.forEach(function (choice,i) {
+    questionsArray[questionsArrayIndex].choices.forEach(function (choice, i) {
 
         // create button for each choice.
         var optionButton = document.createElement("button");
         optionButton.classList.add("choice-btn", "btn", "btn-primary", );
         // optionButton.textContent = choice;
-        optionButton.setAttribute("value",choice);
-        optionButton.innerHTML = "<span>" + lettersArray[i]  + ": </span>"+ choice;
-        
+        optionButton.setAttribute("value", choice);
+        optionButton.innerHTML = "<span>" + lettersArray[i] + ": </span>" + choice;
+
         // Add event listener to each button.
         optionButton.addEventListener("click", checkAnswer);
-       
+
         // Append button element to ul.
         document.querySelector(".choices-list").appendChild(optionButton);
     });
-   
+
 }
 
 var startQuiz = function () {
-    document.querySelector(".questions p").remove();
+    document.querySelector(".questions p").classList.add("hide");
     document.querySelector(".start-quiz").remove();
 
     // timer starts counting.

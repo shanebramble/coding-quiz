@@ -19,10 +19,11 @@ main {
     width: 80%;
     margin: 0 auto;
 }
-.hide
-{
+
+.hide {
     display: none;
 }
+
 .answer-response-style {
     font-style: italic;
     font-size: 120%;
@@ -31,6 +32,7 @@ main {
     color: gray;
     border-top: 2px solid #ccc;
 }
+
 .quiz-section {
     margin-top: 75px;
 }
@@ -45,12 +47,31 @@ main {
     margin: 10px auto;
     padding: 10px 0;
 }
-.start-quiz{
+
+.start-quiz {
     display: flex;
     margin: 10px auto;
 }
-.choice-btn
-{
+
+.submit-style {
+    display: flex;
+    /* justify-content: space-between; */
+    align-items: center;
+    width: 24%;
+    margin: 10px auto;
+
+}
+
+.submit-style label {
+    padding-right: 10px;
+    /* flex:auto */
+}
+
+.submit-style input {
+    margin-right: 10px;
+}
+
+.choice-btn {
     display: block;
     margin: 10px;
 }
