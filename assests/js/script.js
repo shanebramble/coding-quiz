@@ -1,5 +1,5 @@
 var scoreCount = 0;
-var timeLeft = 180;
+var timeLeft = 100;
 var questionsArrayIndex = 0;
 var timeInterval;
 var timerE1 = document.querySelector(".countdown-timer span");
@@ -106,14 +106,14 @@ var checkAnswer = function () {
         timerE1.textContent = timeLeft;
 
         // Indicate that the selected option is incorrect.
-        answerResponse.textContent = "Wrong !";
+        answerResponse.textContent = "Wrong ❌";
     } else {
         // Indicate that the selected option is correct.
-        answerResponse.textContent = "Correct !";
+        answerResponse.textContent = "Correct ✅";
         scoreCount = scoreCount + 10;
     }
 
-    // flash right/wrong feedback on page for half a second
+    // Display the response once after each question.
     answerResponse.setAttribute("class", "answer-response-style");
     setTimeout(function () {
         answerResponse.setAttribute("class", "answer-response-style hide");
@@ -134,19 +134,20 @@ var checkAnswer = function () {
 
 // Save the scores of a user to local storage.
 var saveScores = function (event) {
+    // Prevents webpage from refreshing
     event.preventDefault();
     var initials = inputInitial.value.trim();
-    //  formEl.reset();
+
     if (initials !== "") {
+        // Check to see if an array or value is already stored
+        var highscores = JSON.parse(window.localStorage.getItem("high-scores")) || [];
 
-        var highscores =
-            JSON.parse(window.localStorage.getItem("high-scores")) || [];
-
+        // Store current user information in an object.
         var currentUserScore = {
             initials: initials,
             score: scoreCount
         };
-        console.log("The entered input initials are: " + initials);
+        // Push object information to an array.
         highscores.push(currentUserScore);
         localStorage.setItem("high-scores", JSON.stringify(highscores));
         location.reload();
@@ -154,24 +155,27 @@ var saveScores = function (event) {
 };
 
 var loadScores = function () {
+    // Check to see if an array or value is already stored
     var storedHighScores = JSON.parse(window.localStorage.getItem("high-scores")) || [];
-    // sort highscores by score property in descending order
+
+    // Sort high scores.
     storedHighScores.sort(function (a, b) {
         return b.score - a.score;
     });
-
+    // Loop through each score and print accordingly. 
     storedHighScores.forEach(function (score) {
         // create li tag for each high score
-        var liTag = document.createElement("li");
-        liTag.classList.add("list-group-item");
-        liTag.textContent = score.initials + " - " + score.score;
+        var liEl = document.createElement("li");
+        liEl.classList.add("list-group-item");
+        liEl.textContent = score.initials + " - " + score.score;
 
         // display on page
-        var olEl = document.querySelector(".modal-body");
-        olEl.appendChild(liTag);
+        var modalBodyEl = document.querySelector(".modal-body");
+        modalBodyEl.appendChild(liEl);
     });
 
 };
+// Clear the array store in localStorage.
 function clearHighscores() {
     window.localStorage.removeItem("high-scores");
     window.location.reload();
@@ -224,9 +228,9 @@ var startQuiz = function () {
     document.querySelector(".questions p").classList.add("hide");
     document.querySelector(".start-quiz").remove();
 
-    // timer starts counting.
+    // Timer starts counting.
     countdown();
-    // generate questions with options.
+    // Generate questions with options.
     createQuestions();
 };
 
