@@ -3,10 +3,11 @@ var timeLeft = 180;
 var questionsArrayIndex = 0;
 var timerE1 = document.querySelector(".countdown-timer span");
 var questionFormation = document.querySelector(".questions h2");
+var answerResponse = document.querySelector("#answer-response");
 var questionsArray = [{
         question: "JavaScript is the same as Java.",
-        choices: [true, false],
-        answer: false
+        choices: ["true", "false"],
+        answer: "false"
     },
     {
         question: "Which built-in method adds one or more elements to the end of an array and returns the new length of the array? ",
@@ -19,14 +20,14 @@ var questionsArray = [{
         answer: "toString()"
     },
     {
-        question: "Inside which HTML element do we put the JavaScript?",
-        choices: ["<scripting>", "<javascript>", "<js>", "<script>"],
-        answer: "<script>"
+        question: "Inside which HTML <> element do we put the JavaScript?",
+        choices: ["scripting", "javascript", "js", "script"],
+        answer: "script"
     },
     {
         question: "The external JavaScript file must contain the <script> tag.",
-        choices: [true, false],
-        answer: false
+        choices: ["true", "false"],
+        answer: "false"
     },
     {
         question: "How do you declare a JavaScript variable?",
@@ -40,8 +41,8 @@ var questionsArray = [{
     },
     {
         question: "What will the following code return: Boolean(10 > 9)",
-        choices: [false, true, "undefined", null],
-        answer: true
+        choices: ["false", "true", "undefined", "null"],
+        answer: "true"
     },
     {
         question: "Is JavaScript case-sensitive?",
@@ -50,14 +51,14 @@ var questionsArray = [{
     },
     {
         question: "What does DOM stand for?",
-        choices: ["Dissolved Organic Matter", "Dissolved Organic Matter", "	Document Object Model", "Disk on Module"],
+        choices: ["Dissolved Organic Matter", "Dissolved Organic Matter", "Document Object Model", "Disk on Module"],
         answer: "Document Object Model"
     },
 ];
 
+var lettersArray = ["a", "b", "c", "d"];
 
-
-var quizEnd = function (){
+var quizEnd = function () {
 
 };
 // A countdown timer for the quiz.
@@ -76,35 +77,97 @@ var countdown = function () {
 };
 
 // Check the answer of the selected choice.
-var checkAnswer = function ()
-{
-    if (this.value === questionsArray[questionsArrayIndex].answer)
-    {
+var checkAnswer = function () {
+   
+    console.log("The value of the selected option is: " + this.value);
+    // Check the value of the clicked button.
+    if (this.value != questionsArray[questionsArrayIndex].answer) {
+        // If value picked is incorrect subtract 10 from timer.
+        timeLeft = timeLeft - 10;
 
+        if (timeLeft < 0) {
+            time = 0;
+        }
+        // Display new time on the screen.
+        timerE1.textContent = timeLeft;
+
+        // Indicate that the selected option is incorrect.
+        answerResponse.textContent = "Wrong !";
+    } else {
+        // Indicate that the selected option is correct.
+        answerResponse.textContent = "Correct !";
+        scoreCount = scoreCount + 10;
+    }
+
+    // flash right/wrong feedback on page for half a second
+    answerResponse.setAttribute("class", "answer-response-style");
+    setTimeout(function () {
+        answerResponse.setAttribute("class", "answer-response-style hide");
+    }, 1000);
+
+    // Update the questionsArrayIndexx ++.
+    questionsArrayIndex++;
+
+    if (questionsArrayIndex === questionsArray.length) {
+        quizEnd();
+    } else {
+        // Call the createQuestions function.
+        createQuestions();
     }
 
 };
 
 // Save the scores of a user to local storage.
-var saveScores = function (){
+var saveScores = function () {
 
 };
+
+var loadScores = function () {
+
+};
+
 // A function to form both the questions and corresponding options.
 var createQuestions = function () {
 
     questionFormation.textContent = questionsArray[questionsArrayIndex].question;
 
-    for (var j = 0; j < questionsArray[questionsArrayIndex].choices.length; j++) {
+    // Clear out any old question choices.
+    document.querySelector(".choices-list").innerHTML = "";
+
+    // Alternative Method:
+/*
+    for (var i = 0; i < questionsArray[questionsArrayIndex].choices.length; i++) {
 
         // create button for each choice.
         var optionButton = document.createElement("button");
         optionButton.classList.add("choice-btn", "btn", "btn-primary", );
-        optionButton.textContent = questionsArray[questionsArrayIndex].choices[j];
+        optionButton.setAttribute("index-location", "questionsArray[questionsArrayIndex].choices[i]");
+        optionButton.textContent = questionsArray[questionsArrayIndex].choices[i];
 
-        // append to button element to ul.
+        // Add event listener to each button.
+        optionButton.addEventListener("click", checkAnswer);
+
+        // Append button element to ul.
         document.querySelector(".choices-list").appendChild(optionButton);
-    }
-};
+    }*/
+
+    questionsArray[questionsArrayIndex].choices.forEach(function (choice,i) {
+
+        // create button for each choice.
+        var optionButton = document.createElement("button");
+        optionButton.classList.add("choice-btn", "btn", "btn-primary", );
+        // optionButton.textContent = choice;
+        optionButton.setAttribute("value",choice);
+        optionButton.innerHTML = "<span>" + lettersArray[i]  + ": </span>"+ choice;
+        
+        // Add event listener to each button.
+        optionButton.addEventListener("click", checkAnswer);
+       
+        // Append button element to ul.
+        document.querySelector(".choices-list").appendChild(optionButton);
+    });
+   
+}
 
 var startQuiz = function () {
     document.querySelector(".questions p").remove();
@@ -115,7 +178,5 @@ var startQuiz = function () {
     // generate questions with options.
     createQuestions();
 };
-
-
 
 document.querySelector(".start-quiz").addEventListener("click", startQuiz);
